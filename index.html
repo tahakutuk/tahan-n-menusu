@@ -3,251 +3,296 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Botta Bloom Menü</title>
+  <title>Botta Bloom QR Menü</title>
 
-  <!-- TailwindCSS CDN -->
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
 
   <style>
-    body{font-family:'Quicksand',sans-serif;}
-    .menu-item img{border-radius:.375rem;}
+    /* ---------- RENK PALETİ ---------- */
+    :root{
+      --green:#56ab2f;
+      --yellow:#ffd740;
+      --pink:#ef476f;
+      --purple:#7b61ff;
+      --blue:#0099f7;
+    }
+
+    body{
+      font-family:'Quicksand',sans-serif;
+      background:linear-gradient(45deg,#f7ffe5 0%,#e5f4ff 100%);
+    }
+
+    /* ---------- TAB BUTONLARI ---------- */
+    .tab-btn{@apply text-sm sm:text-base font-semibold py-2 px-4 rounded-full transition-all whitespace-nowrap;}
+    .tab-btn:not(.active){@apply bg-gray-200 text-gray-600 hover:bg-gray-300;}
+    .tab-btn.active{@apply bg-[color:var(--green)] text-white shadow-lg scale-105;}
+
+    /* ---------- ÜRÜN KARTI ---------- */
+    .menu-item{@apply bg-white/80 backdrop-blur-md rounded-xl shadow flex justify-between items-start gap-4 p-4 border-l-4;}
+    .menu-item:hover{@apply scale-[1.01] shadow-lg transition-all;}
+
+    /* ---------- KATEGORİYE GÖRE RENKLİ SOL ÇİZGİ ---------- */
+    .kahvalti .menu-item   {border-color:var(--yellow);} 
+    .atistirmalik .menu-item{border-color:var(--pink);}   
+    .bowls .menu-item      {border-color:var(--green);}  
+    .izgaralar .menu-item   {border-color:var(--blue);}   
+    .hamburgerler .menu-item{border-color:var(--purple);} 
+    .tacolar .menu-item     {border-color:var(--pink);}   
+    .makarnalar .menu-item  {border-color:var(--yellow);} 
+    .salatalar .menu-item   {border-color:var(--green);}  
+    .tatlilar .menu-item    {border-color:var(--pink);}   
+    .kahveler .menu-item    {border-color:var(--purple);} 
+    .icecekler .menu-item   {border-color:var(--blue);}   
+    .alkollu .menu-item     {border-color:var(--yellow);} 
   </style>
 </head>
-<body class="bg-green-50 text-gray-800">
-
-  <!-- ---------- HEADER ---------- -->
-  <header class="text-center py-6">
-    <h1 class="text-4xl font-semibold text-green-700">Botta Bloom Menü</h1>
-    <p class="mt-2 text-sm text-gray-600">Güzel  Kokulu Şeyler </p>
+<body>
+  <!-- ---------- BAŞLIK ---------- -->
+  <header class="text-center py-8">
+    <h1 class="text-4xl sm:text-5xl font-bold text-[color:var(--green)] drop-shadow-sm">Botta Bloom</h1>
+    <p class="mt-1 text-sm sm:text-base text-gray-600">Adana • Çiçek Kahve &amp; Güzel Kokulu Şeyler</p>
   </header>
 
-  <!-- ---------- MAIN ---------- -->
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+  <!-- ---------- SEKME NAV ---------- -->
+  <nav id="tabs" class="flex gap-2 overflow-x-auto px-4 sm:px-8 pb-4"></nav>
 
-  <!-- ===== KAHVALTILIK ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">kahvaltılık</h2>
-<section>
-  <h2 class="text-2xl font-semibold text-green-800 mb-4">kahvaltılık</h2>
+  <!-- ---------- ANA İÇERİK ---------- -->
+  <main id="sections" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 pb-16"></main>
 
-  <div class="mb-4">
-    <img src="images/kahvalti.jpg"
-         alt="kahvaltılıklar"
-         class="w-full max-h-64 object-cover rounded-lg shadow" />
-  </div>
+  <footer class="text-center text-xs text-gray-500 py-4">© 2025 Botta Bloom • Tüm hakları saklıdır.</footer>
 
-  <div class="space-y-3">
-    <!-- ürün kartları burada -->
-  </div>
-</section>
+  <script>
+    /* =========================================================
+       MENÜ VERİSİ – Görsel menülerden aktarılmış tam liste
+       ========================================================= */
+    const menuData = [
+      {
+        id: 'kahvalti',
+        title: 'Kahvaltılıklar',
+        color: 'var(--yellow)',
+        items: [
+          { name: 'Tost Tabağı',            price: 220, desc: 'Beyaz peynir, domates, salatalık ve kızarmış ekmek ile.' },
+          { name: 'Karışık Tost Tabağı',    price: 270, desc: 'Kaşar, sucuk, domates ve patates kızartması yanında.' },
+          { name: 'Beyaz Tost',             price: 230, desc: 'Eritilmiş beyaz peynirli klasik tost.' },
+          { name: 'Hindi Füme Tost',        price: 240, desc: 'Hindi füme, kaşar, roka ve hardal.' },
+          { name: 'Sade Omlet',             price: 155, desc: 'Üç yumurta ile hazırlanan sade omlet.' },
+          { name: 'Fit Kahvaltı 3XL',       price: 360, desc: 'Yulaf, avokado, lor peyniri ve haşlanmış yumurta.' },
+          { name: 'Fit Kahvaltı XL',        price: 340, desc: 'Sebze soteli yumurta, tam buğday ekmeği.' },
+          { name: 'Fit Kahvaltı XS',        price: 300, desc: 'Mini sebzeli omlet, mevsim yeşilliği.' }
+        ]
+      },
+      {
+        id: 'atistirmalik',
+        title: 'Atıştırmalık',
+        color: 'var(--pink)',
+        items: [
+          { name: 'Yer Fıstığı',            price:  90, desc: 'Tuzlu kavrulmuş yer fıstığı.' },
+          { name: 'Karışık Çerez',          price: 140, desc: 'Badem, kaju, yer fıstığı ve fındık karışımı.' },
+          { name: 'Patates Kızartması',     price: 170, desc: 'Klasik kalın kesim patates.' },
+          { name: 'Patates Kızartması XL',  price: 240, desc: '2 kişilik büyük porsiyon.' },
+          { name: 'Bira Tabağı VAN',        price: 290, desc: 'Patates, soğan halkası, sosis ve salsa.' },
+          { name: 'Peynir Tabağı',          price: 490, desc: '4 çeşit yöresel peynir, kuru meyve & badem.' }
+        ]
+      },
+      {
+        id: 'bowls',
+        title: 'Bowllar',
+        color: 'var(--green)',
+        items: [
+          { name: 'Sport Bowl',                       price: 460, desc: 'Izgara tavuk, kinoa, avokado, nohut, bebek ıspanak.' },
+          { name: 'Smoothie Bowl',                    price: 250, desc: 'Orman meyveleri, granola, hindistancevizi.' },
+          { name: 'Tavuk Root Pilates Bowl',          price: 430, desc: 'Izgara tavuk, pancar humus, karabuğday.' },
+          { name: 'Hamburger Root Pilates Bowl',      price: 470, desc: 'Dana burger parçaları, karamelize soğan, patates.' },
+          { name: 'Kinoalı Bonfile Bowl',             price: 520, desc: 'Antrikot dilimleri, kinoa salatası, parmesan.' },
+          { name: 'Bakliyatlı Izgara Tavuk Bowl',     price: 450, desc: 'Mercimek-tahin sos, ızgara tavuk göğüs.' }
+        ]
+      },
+      {
+        id: 'izgaralar',
+        title: 'Izgaralar',
+        color: 'var(--blue)',
+        items: [
+          { name: 'Patates Püreli Izgara Tavuk', price: 450, desc: 'Kremalı patates püresi üzerinde sote sebzeli tavuk.' },
+          { name: 'Ispanaklı Izgara Tavuk',      price: 400, desc: 'Izgara tavuk göğüs, ıspanak sote, sarımsaklı yoğurt.' },
+          { name: 'Makarnalı Izgara Tavuk',      price: 375, desc: 'Tereyağlı fettuccine ile servis.' }
+        ]
+      },
+      {
+        id: 'hamburgerler',
+        title: 'Hamburgerler',
+        color: 'var(--purple)',
+        items: [
+          { name: 'BottaBurger',      price: 350, desc: '160 gr dana köfte, cheddar, karamelize soğan, özel sos.' },
+          { name: 'Tavuk Burger',     price: 330, desc: 'Izgara tavuk, gouda peyniri, avokado sos.' },
+          { name: 'Ciabatta Burger',  price: 375, desc: 'Dana köfte, ciabatta ekmek, trüf mayonez.' },
+          { name: 'Meş Wrap Burger',  price: 350, desc: 'Dana köfte, lavaş, tulum peyniri.' },
+          { name: 'Vegan Burger',     price: 350, desc: 'Nohut ve pancarlı köfte, vegan mayonez.' },
+          { name: 'The Patty Melt',   price: 375, desc: 'Çift köfte, eritilmiş İsviçre peyniri, karamelli soğan.' }
+        ]
+      },
+      {
+        id: 'tacolar',
+        title: 'Tacolar',
+        color: 'var(--pink)',
+        items: [
+          { name: 'Bonfile Taco',  price: 520, desc: 'Izgara bonfile, pico de gallo, kremalı avokado.' },
+          { name: 'Tavuk Taco',    price: 420, desc: 'Marine tavuk, beyaz lahana salatası.' },
+          { name: 'Hellim Taco',   price: 375, desc: 'Izgara hellim, roka, nar ekşisi.' },
+          { name: 'Tiftik Taco',   price: 520, desc: '8 saat pişmiş kuzu tiftik, chipotle mayo.' }
+        ]
+      },
+      {
+        id: 'makarnalar',
+        title: 'Makarnalar',
+        color: 'var(--yellow)',
+        items: [
+          { name: 'Fettuccine Alfredo', price: 360, desc: 'Kremalı parmesan sos, mantar.' },
+          { name: 'Penne Arrabiata',     price: 290, desc: 'Domates, sarımsak, fesleğen ve acı biber.' }
+        ]
+      },
+      {
+        id: 'salatalar',
+        title: 'Salatalar',
+        color: 'var(--green)',
+        items: [
+          { name: 'Köy Peynirli Pancar Salatası',     price: 340, desc: 'Közlenmiş pancar, keçi peyniri, ceviz, roka.' },
+          { name: 'Parmesanlı Avokado Salatası',      price: 340, desc: 'Roka, avokado dilimleri, parmesan talaş.' },
+          { name: 'Bonfile Salata',                   price: 460, desc: 'Izgara bonfile dilimleri, karışık yeşillik.' },
+          { name: 'Hellim Salata',                    price: 340, desc: 'Izgara hellim, nar taneleri, roka.' },
+          { name: 'Falafelli Tabule (Vegan)',         price: 360, desc: 'Maydanozlu bulgur salatası, falafel topları.' }
+        ]
+      },
+      {
+        id: 'tatlilar',
+        title: 'Tatlılar & Pastalar',
+        color: 'var(--pink)',
+        items: [
+          { name: 'Baklavalı Cheesecake', price: 110, desc: 'Baklava hamuru katmanlı fıstıklı cheesecake.' },
+          { name: 'Cheesecake',           price: 100, desc: 'Krem peynir dolgulu klasik dilim.' },
+          { name: 'Fit Brownie',          price: 100, desc: 'Şekersiz badem unlu brownie.' },
+          { name: 'Ebru Poğaçası',        price:  80, desc: 'Peynirli çıtır poğaça, dereotu aromalı.' }
+        ]
+      },
+      {
+        id: 'sicak-kahve',
+        title: 'Sıcak Kahveler',
+        color: 'var(--purple)',
+        items: [
+          { name: 'Espresso',   price: 140, desc: '30 ml tek shot yoğun kahve.' },
+          { name: 'Americano',  price: 150, desc: 'Espresso üzerine sıcak su.' },
+          { name: 'Latte',      price: 160, desc: 'Espresso + buharda süt, kadifemsi köpük.' },
+          { name: 'Cappuccino', price: 160, desc: 'Eşit espresso, süt & yoğun köpük.' },
+          { name: 'Mocha',      price: 170, desc: 'Çikolata soslu latte.' },
+          { name: 'Flat White', price: 165, desc: 'Çift espresso, ince süt köpüğü.' }
+        ]
+      },
+      {
+        id: 'soguk-kahve',
+        title: 'Soğuk Kahveler',
+        color: 'var(--blue)',
+        items: [
+          { name: 'Ice Americano',   price: 160, desc: 'Buz ve espresso ile serinletici.' },
+          { name: 'Ice Latte',       price: 170, desc: 'Soğuk süt + espresso.' },
+          { name: 'Cold Brew',       price: 180, desc: '18 saatte demlenir. Portakal & çubuk tarçınla servis.' },
+          { name: 'Ice Mocha',       price: 180, desc: 'Soğuk çikolatalı latte.' },
+          { name: 'Ice Matcha Latte',price: 190, desc: 'Serinletici matcha ve süt.' }
+        ]
+      },
+      {
+        id: 'nitelikli',
+        title: 'Nitelikli Kahveler',
+        color: 'var(--yellow)',
+        items: [
+          { name: 'Muitaca / Colombia', price: 130, desc: 'Washed process, karamelli, narenciye notaları.' }
+        ]
+      },
+      {
+        id: 'icecekler',
+        title: 'Soğuk İçecekler',
+        color: 'var(--blue)',
+        items: [
+          { name: 'Çilekli Smoothie', price: 190, desc: 'Taze çilek, yoğurt, yulaf.' },
+          { name: 'Muzlu Smoothie',   price: 190, desc: 'Muz, bal, badem sütü.' },
+          { name: 'Tropic Smoothie',  price: 210, desc: 'Mango, ananas, hindistan cevizi suyu.' },
+          { name: 'Fresh Smoothie',   price: 210, desc: 'Ispanak, salatalık, yeşil elma.' },
+          { name: 'Limonata',         price: 165, desc: 'Taze sıkım limon ve nane.' },
+          { name: 'Çilekli Limonata', price: 175, desc: 'Limonata + çilek püresi.' },
+          { name: 'Coca Cola / Zero', price:  85, desc: '33 cl şişe.' },
+          { name: 'Soda',             price:  70, desc: 'Doğal maden suyu.' }
+        ]
+      },
+      {
+        id: 'alkollu',
+        title: 'Alkollü',
+        color: 'var(--yellow)',
+        items: [
+          { name: 'Bomonti Filtresiz',              price: 150, desc: '50 cl şişe.' },
+          { name: 'Efes',                           price: 140, desc: '50 cl şişe.' },
+          { name: 'Johnnie Walker Red (4 cl)',      price: 260, desc: 'Islay & Highland harmanı.' },
+          { name: 'Jack Daniel’s (4 cl)',           price: 300, desc: 'Tennessee viskisi.' },
+          { name: 'Absolut Vodka (4 cl)',           price: 250, desc: 'Buğday bazlı İsveç votkası.' },
+          { name: 'Yeni Rakı 35 cl',                price: 460, desc: 'Anason aromalı geleneksel içki.' }
+        ]
+      }
+    ];
 
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?toast" alt=""><span>Tost Tabağı</span></div><span class="font-semibold text-green-700">220 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?sandwich" alt=""><span>Karışık Tost Tabağı</span></div><span class="font-semibold text-green-700">270 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?toast" alt=""><span>Beyaz Tost</span></div><span class="font-semibold text-green-700">230 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?sandwich" alt=""><span>Hindi Füme Tost</span></div><span class="font-semibold text-green-700">240 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?omelette" alt=""><span>Sade Omlet</span></div><span class="font-semibold text-green-700">155 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?breakfast" alt=""><span>Fit Kahvaltı 3XL</span></div><span class="font-semibold text-green-700">360 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?breakfast" alt=""><span>Fit Kahvaltı XL</span></div><span class="font-semibold text-green-700">340 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?breakfast" alt=""><span>Fit Kahvaltı XS</span></div><span class="font-semibold text-green-700">300 ₺</span></div>
-    </div>
-  </section>
+    /* =========================================================
+       SEKME ve ÜRÜN LİSTELEMESİ
+       ========================================================= */
+    const tabs      = document.getElementById('tabs');
+    const sections  = document.getElementById('sections');
 
-  <!-- ===== ATIŞTIRMALIK ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Atıştırmalık</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?peanuts" alt=""><span>Yer Fıstığı</span></div><span class="font-semibold text-green-700">90 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?nuts" alt=""><span>Karışık Çerez</span></div><span class="font-semibold text-green-700">140 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?fries" alt=""><span>Patates Kızartması</span></div><span class="font-semibold text-green-700">170 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?fries" alt=""><span>Patates Kızartması XL</span></div><span class="font-semibold text-green-700">240 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?beer-snack" alt=""><span>Bira Tabağı VAN</span></div><span class="font-semibold text-green-700">290 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?cheese" alt=""><span>Peynir Tabağı</span></div><span class="font-semibold text-green-700">490 ₺</span></div>
-    </div>
-  </section>
+    menuData.forEach((sec, idx) => {
+      /* ----- SEKME BUTONU OLUŞTUR ----- */
+      const btn = document.createElement('button');
+      btn.textContent        = sec.title;
+      btn.className          = 'tab-btn' + (idx === 0 ? ' active' : '');
+      btn.dataset.target     = sec.id;
+      btn.style.backgroundColor = idx === 0 ? 'var(--green)' : '';
+      btn.onclick            = e => switchTab(sec.id, e);
+      tabs.appendChild(btn);
 
-  <!-- ===== BOWLLAR ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Bowllar</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?bowl" alt=""><span>Sport Bowl</span></div><span class="font-semibold text-green-700">460 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?smoothie-bowl" alt=""><span>Smoothie Bowl</span></div><span class="font-semibold text-green-700">250 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?chicken-bowl" alt=""><span>Tavuk Root Pilates Bowl</span></div><span class="font-semibold text-green-700">430 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?burger" alt=""><span>Hamburger Root Pilates Bowl</span></div><span class="font-semibold text-green-700">470 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?steak-salad" alt=""><span>Kinoalı Bonfile Bowl</span></div><span class="font-semibold text-green-700">520 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?grain-bowl" alt=""><span>Bakliyatlı Izgara Tavuk Bowl</span></div><span class="font-semibold text-green-700">450 ₺</span></div>
-    </div>
-  </section>
+      /* ----- İÇERİK ALANI OLUŞTUR ----- */
+      const section = document.createElement('section');
+      section.id          = sec.id;
+      section.className   = `menu-section ${sec.id} ${idx === 0 ? '' : 'hidden'}`;
 
-  <!-- ===== HAMBURGERLER ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Hamburgerler</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?burger" alt=""><span>BottaBurger</span></div><span class="font-semibold text-green-700">350 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?chicken-burger" alt=""><span>Tavuk Burger</span></div><span class="font-semibold text-green-700">330 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?burger" alt=""><span>Ciabatta Burger</span></div><span class="font-semibold text-green-700">375 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?wrap" alt=""><span>Meş Wrap Burger</span></div><span class="font-semibold text-green-700">350 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?vegan-burger" alt=""><span>Vegan Burger</span></div><span class="font-semibold text-green-700">350 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?burger" alt=""><span>The Patty Melt</span></div><span class="font-semibold text-green-700">375 ₺</span></div>
-    </div>
-  </section>
+      // Başlık
+      const h2 = document.createElement('h2');
+      h2.textContent = sec.title;
+      h2.className   = 'text-3xl font-bold mb-6';
+      h2.style.color = sec.color;
+      section.appendChild(h2);
 
-  <!-- ===== IZGARALAR ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Izgaralar</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?grilled-chicken" alt=""><span>Patates Püreli Izgara Tavuk</span></div><span class="font-semibold text-green-700">450 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?chicken-spinach" alt=""><span>Ispanaklı Izgara Tavuk</span></div><span class="font-semibold text-green-700">400 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?grilled-pasta" alt=""><span>Makarnalı Izgara Tavuk</span></div><span class="font-semibold text-green-700">375 ₺</span></div>
-    </div>
-  </section>
+      // Ürün listesi
+      const list = document.createElement('div');
+      list.className = 'space-y-4';
+      sec.items.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'menu-item';
+        itemDiv.innerHTML = `
+          <div>
+            <span class='font-semibold'>${item.name}</span><br>
+            <small class='text-gray-500'>${item.desc}</small>
+          </div>
+          <span class='font-semibold' style='color:${sec.color};'>${item.price} ₺</span>`;
+        list.appendChild(itemDiv);
+      });
+      section.appendChild(list);
+      sections.appendChild(section);
+    });
 
-  <!-- ===== TACOLAR ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Tacolar</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?steak-taco" alt=""><span>Bonfile Taco</span></div><span class="font-semibold text-green-700">520 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?chicken-taco" alt=""><span>Tavuk Taco</span></div><span class="font-semibold text-green-700">420 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?halloumi" alt=""><span>Hellim Taco</span></div><span class="font-semibold text-green-700">375 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?lamb-taco" alt=""><span>Tiftik Taco</span></div><span class="font-semibold text-green-700">520 ₺</span></div>
-    </div>
-  </section>
-
-  <!-- ===== MAKARNALAR ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Makarnalar</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?alfredo" alt=""><span>Fettuccine Alfredo</span></div><span class="font-semibold text-green-700">360 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?penne" alt=""><span>Penne Arrabiata</span></div><span class="font-semibold text-green-700">290 ₺</span></div>
-    </div>
-  </section>
-
-  <!-- ===== SICAK KAHVELER ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Sıcak Kahveler</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?espresso" alt=""><span>Espresso</span></div><span class="font-semibold text-green-700">140 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?americano" alt=""><span>Americano</span></div><span class="font-semibold text-green-700">150 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?latte" alt=""><span>Latte</span></div><span class="font-semibold text-green-700">160 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?cappuccino" alt=""><span>Cappuccino</span></div><span class="font-semibold text-green-700">160 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?mocha" alt=""><span>Mocha</span></div><span class="font-semibold text-green-700">170 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?flat-white" alt=""><span>Flat White</span></div><span class="font-semibold text-green-700">165 ₺</span></div>
-    </div>
-  </section>
-
-  <!-- ===== NİTELİKLİ KAHVELER ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Nitelikli Kahveler</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?filter-coffee" alt=""><span>Muitaca / Colombia</span></div><span class="font-semibold text-green-700">130 ₺</span></div>
-    </div>
-  </section>
-
-  <!-- ===== SOĞUK KAHVELER ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Soğuk Kahveler</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?iced-coffee" alt=""><span>Ice Americano</span></div><span class="font-semibold text-green-700">160 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?iced-latte" alt=""><span>Ice Latte</span></div><span class="font-semibold text-green-700">170 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?iced-mocha" alt=""><span>Ice Mocha</span></div><span class="font-semibold text-green-700">180 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?iced-cappuccino" alt=""><span>Ice Cappuccino</span></div><span class="font-semibold text-green-700">170 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?matcha" alt=""><span>Ice Matcha Latte</span></div><span class="font-semibold text-green-700">190 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?frappe" alt=""><span>Frappe</span></div><span class="font-semibold text-green-700">180 ₺</span></div>
-    </div>
-  </section>
-
-  <!-- ===== TATLILAR & PASTALAR ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Tatlılar & Pastalar</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?cheesecake" alt=""><span>Baklavalı Cheesecake</span></div><span class="font-semibold text-green-700">110 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?cheesecake" alt=""><span>Cheesecake</span></div><span class="font-semibold text-green-700">100 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?brownie" alt=""><span>Fit Brownie</span></div><span class="font-semibold text-green-700">100 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?pastry" alt=""><span>Ebru Poğaçası</span></div><span class="font-semibold text-green-700">80 ₺</span></div>
-    </div>
-  </section>
-
-  <!-- ===== SALATALAR ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Salatalar</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?salad" alt=""><span>Köy Peynirli Pancar Salatası</span></div><span class="font-semibold text-green-700">340 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?avocado-salad" alt=""><span>Parmesanlı Avokado Salatası</span></div><span class="font-semibold text-green-700">340 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?steak-salad" alt=""><span>Bonfile Salata</span></div><span class="font-semibold text-green-700">460 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?halloumi" alt=""><span>Hellim Salata</span></div><span class="font-semibold text-green-700">340 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?falafel" alt=""><span>Falafelli Tabule (Vegan)</span></div><span class="font-semibold text-green-700">360 ₺</span></div>
-    </div>
-  </section>
-
-  <!-- ===== RONNEFELDT ÇAYLAR ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Ronnefeldt Çaylar</h2>
-    <div class="space-y-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Morgentau</span><span class="font-semibold text-green-700">170 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Milky Oolong</span><span class="font-semibold text-green-700">170 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>White Yin Long</span><span class="font-semibold text-green-700">170 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Refreshing Mint</span><span class="font-semibold text-green-700">170 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Ice Ronnefeldt</span><span class="font-semibold text-green-700">+10 ₺</span></div>
-    </div>
-  </section>
-
-  <!-- ===== SOĞUK İÇECEKLER ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Soğuk İçecekler</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?strawberry-smoothie" alt=""><span>Çilekli Smoothie</span></div><span class="font-semibold text-green-700">190 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?banana-smoothie" alt=""><span>Muzlu Smoothie</span></div><span class="font-semibold text-green-700">190 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?tropical-smoothie" alt=""><span>Tropic Smoothie</span></div><span class="font-semibold text-green-700">210 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?green-smoothie" alt=""><span>Fresh Smoothie</span></div><span class="font-semibold text-green-700">210 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?lemonade" alt=""><span>Limonata</span></div><span class="font-semibold text-green-700">165 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?strawberry-lemonade" alt=""><span>Çilekli Limonata</span></div><span class="font-semibold text-green-700">175 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?coca-cola" alt=""><span>Coca Cola / Zero</span></div><span class="font-semibold text-green-700">85 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><div class="flex items-center space-x-4"><img src="https://source.unsplash.com/80x80/?soda-water" alt=""><span>Soda</span></div><span class="font-semibold text-green-700">70 ₺</span></div>
-    </div>
-  </section>
-
-  <!-- ===== ALKOLLÜ İÇECEKLER ===== -->
-  <section>
-    <h2 class="text-2xl font-semibold text-green-800 mb-4">Alkollü İçecekler</h2>
-
-    <h3 class="font-semibold text-green-700 mb-2">Bira</h3>
-    <div class="space-y-2 mb-4">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Bomonti Filtresiz</span><span class="font-semibold text-green-700">150 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Carlsberg</span><span class="font-semibold text-green-700">160 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Efes</span><span class="font-semibold text-green-700">140 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Draft Beer 0.5 L</span><span class="font-semibold text-green-700">180 ₺</span></div>
-    </div>
-
-    <h3 class="font-semibold text-green-700 mb-2">Shot</h3>
-    <div class="space-y-2 mb-4">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>B-52</span><span class="font-semibold text-green-700">150 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Tequila</span><span class="font-semibold text-green-700">140 ₺</span></div>
-    </div>
-
-    <h3 class="font-semibold text-green-700 mb-2">Viski (4 cl)</h3>
-    <div class="space-y-2 mb-4">
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Johnnie Walker Red</span><span class="font-semibold text-green-700">260 ₺</span></div>
-      <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3"><span>Jack Daniel’s</span><span class="font-semibold text-green-700">300 ₺</span></div>
-    </div>
-
-    <h3 class="font-semibold text-green-700 mb-2">Vodka (4 cl)</h3>
-    <div class="space-y-2 mb-4">
-      <div class="menu-item flex items-center justify_between bg-white rounded-lg shadow-sm p-3"><span>Absolut</span><span class="font-semibold text-green-700">250 ₺</span></div>
-    </div>
-
-    <h3 class="font-semibold text-green-700 mb-2">Rakı</h3>
-    <div class="menu-item flex items-center justify-between bg-white rounded-lg shadow-sm p-3 mb-2"><span>Yeni Rakı 35 cl</span><span class="font-semibold text-green-700">460 ₺</span></div>
-  </section>
-
-  </main>
-
-  <!-- ---------- FOOTER ---------- -->
-  <footer class="text-center py-6 text-xs text-gray-500">
-    © 2025 Botta Bloom • Tüm hakları saklıdır.
-  </footer>
-
+    /* ---------- SEKME GEÇİŞ FONKSİYONU ---------- */
+    function switchTab(id, event){
+      // içerikleri gizle/göster
+      document.querySelectorAll('.menu-section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      // aktif butonu güncelle
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+  </script>
 </body>
 </html>
